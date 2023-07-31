@@ -2,7 +2,7 @@ package de.schmiereck.golBruteForce.util;
 
 public abstract class PrintUtils {
 
-    public static String toBinary(long x, int len)
+    public static String toBinaryStr(long x, int len)
     {
         StringBuilder result = new StringBuilder();
 

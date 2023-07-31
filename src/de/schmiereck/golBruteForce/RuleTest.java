@@ -2,7 +2,7 @@ package de.schmiereck.golBruteForce;
 
 import static de.schmiereck.golBruteForce.RuleService.createRule;
 import static de.schmiereck.golBruteForce.RuleService.createRuleFor2States;
-import static de.schmiereck.golBruteForce.util.PrintUtils.toBinary;
+import static de.schmiereck.golBruteForce.util.PrintUtils.toBinaryStr;
 
 public class RuleTest {
     public static void main(String[] args) {
@@ -37,13 +37,17 @@ public class RuleTest {
             showRule(createRule(stateCount, 0b101010101010101010101010101_101010101010101010101010101L, cellCount));
             showRule(createRule(stateCount, 0b101010101010101010101010101_010101010101010101010101010L, cellCount));
             showRule(createRule(stateCount, 0b010101010101010101010101010_010101010101010101010101010L, cellCount));
+            showRule(createRule(stateCount, 0b111111111111111111111111111_111111111111111111111111111L, cellCount));
         }
     }
 
     private static void showRule(final Rule rule) {
         System.out.println("=================================================================================");
-        System.out.printf("Rule-Nr: %,2d, stateCount:%2d\n", rule.ruleNr, rule.stateCount);
-        System.out.printf("%s\n", toBinary(rule.ruleNr, 64));
+        System.out.printf("Rule-Nr: %,d [%,d + %,d], stateCount:%2d\n", rule.ruleNr, rule.level0RuleNr, rule.level1RuleNr, rule.stateCount);
+        System.out.printf("         %s\n", toBinaryStr(rule.level0RuleNr, 32));
+        System.out.printf("         %s\n", toBinaryStr(rule.level1RuleNr, 32));
+
+        System.out.printf("%s\n", toBinaryStr(rule.ruleNr, 64));
         //final long inputCombinationRuleCount = (((1 << (rule.stateCount * rule.stateCount)) << rule.stateCount) << rule.stateCount);
         final long inputCombinationRuleCount = RuleService.calcInputCombinationRuleCount(rule.stateCount);
         final long baseRuleCount = RuleService.calcBaseRuleCount(rule.stateCount, inputCombinationRuleCount);
@@ -52,10 +56,10 @@ public class RuleTest {
         final long level0RuleNr = RuleService.calcLevel0RuleNr(rule.ruleNr, baseRuleCount);
 
         //final long level0RuleNr = rule.ruleNr % max;
-        System.out.printf("%s (inputCombinationRuleCount:%,d) (baseRuleCount:%,d) (max2:%,d)\n", toBinary(level0RuleNr, 64), inputCombinationRuleCount, baseRuleCount, max2);
+        System.out.printf("%s (inputCombinationRuleCount:%,d) (baseRuleCount:%,d) (max2:%,d)\n", toBinaryStr(level0RuleNr, 64), inputCombinationRuleCount, baseRuleCount, max2);
 
         final long level1RuleNr = RuleService.calcLevel1RuleNr(rule.ruleNr, baseRuleCount);
-        System.out.printf("%s\n", toBinary(level1RuleNr, 64));
+        System.out.printf("%s\n", toBinaryStr(level1RuleNr, 64));
 
         int pos = 0;
         for (int aMatrixStatePos = 0; aMatrixStatePos < rule.stateCount; aMatrixStatePos++) {

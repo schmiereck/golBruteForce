@@ -79,9 +79,9 @@ public class WorldService {
 
     private static int calcSavePos(final World world, int cellPos) {
         if (cellPos < 0) {
-            return (world.size - 1) + cellPos;
+            return world.size + cellPos;
         } else {
-            if (cellPos > (world.size - 1)) {
+            if (cellPos >= world.size) {
                 return cellPos % world.size;
             } else {
                 return cellPos;
@@ -94,4 +94,46 @@ public class WorldService {
         map.cellArr[cellPos].state = state;
     }
 
+    public static class Stat {
+        public int count = 0;
+        public int lastAbs = -1;
+        public int absSum = 0;
+        public int absAverage = 0;
+        public int diffSum = 0;
+        public int diffAverage = 0;
+    }
+
+    public static void calcWorldStat(final World world, final Rule rule) {
+        for (int runPos = 0; runPos < world.historyCount; runPos++) {
+            final Map map = world.mapArr[runPos];
+
+            calcRunStat(world.complexityStat, map.statComplexity);
+            calcRunStat(world.energyStat, map.statEnergy);
+            calcRunStat(world.mass0PointPosStat, map.mass0PointPos);
+            calcRunStat(world.statMiddleAsymmetryAsymmetryStat, map.statMiddleAsymmetry.asymmetry);
+            calcRunStat(world.statMiddleAsymmetryWeightedAsymmetryStat, map.statMiddleAsymmetry.weightedAsymmetry);
+            calcRunStat(world.statMassPointAsymmetryAsymmetryStat, map.statMassPointAsymmetry.asymmetry);
+            calcRunStat(world.statMassPointAsymmetryWeightedAsymmetryStat, map.statMassPointAsymmetry.weightedAsymmetry);
+        }
+        calcStatAverage(world.complexityStat);
+        calcStatAverage(world.energyStat);
+        calcStatAverage(world.mass0PointPosStat);
+        calcStatAverage(world.statMiddleAsymmetryAsymmetryStat);
+        calcStatAverage(world.statMiddleAsymmetryWeightedAsymmetryStat);
+        calcStatAverage(world.statMassPointAsymmetryAsymmetryStat);
+        calcStatAverage(world.statMassPointAsymmetryWeightedAsymmetryStat);
+    }
+
+    private static void calcRunStat(final Stat stat, final int abs) {
+        stat.absSum += abs;
+        if (stat.lastAbs != -1) {
+            stat.diffSum += Math.abs(stat.lastAbs - abs);
+        }
+        stat.count++;
+        stat.lastAbs = abs;
+    }
+    private static void calcStatAverage(final Stat stat) {
+        stat.absAverage = stat.absSum / stat.count;
+        stat.diffAverage = stat.diffSum / stat.count;
+    }
 }

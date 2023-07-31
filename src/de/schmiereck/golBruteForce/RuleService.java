@@ -62,8 +62,16 @@ public class RuleService {
         return rule;
     }
 
+    public static int calcInputCombinationBitCount(final int stateCount) {
+        return (stateCount * stateCount * stateCount);
+    }
+
     public static int calcInputCombinationRuleCount(final int stateCount) {
         return (((1 << (stateCount * stateCount)) << stateCount) << stateCount);
+    }
+
+    public static int calcInputCombinationMax(final int stateCount) {
+        return calcInputCombinationRuleCount(stateCount) - 1;
     }
 
     public static long calcStateRuleCount(int stateCount) {
@@ -75,6 +83,10 @@ public class RuleService {
     public static long calcBaseRuleCount(int stateCount, long inputCombinationRuleCount) {
         final long stateRuleCount = calcStateRuleCount(stateCount);
         return ((inputCombinationRuleCount) * (stateRuleCount));
+    }
+
+    public static long calcBaseRuleMax(int stateCount, long inputCombinationRuleCount) {
+        return calcBaseRuleCount(stateCount, inputCombinationRuleCount) - 1;
     }
 
     static long calcLevel0RuleNr(final long ruleNr, final long ruleCount) {
