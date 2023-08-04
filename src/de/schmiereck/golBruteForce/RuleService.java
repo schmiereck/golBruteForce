@@ -70,6 +70,54 @@ public class RuleService {
         return (((1 << (stateCount * stateCount)) << stateCount) << stateCount);
     }
 
+    public static long calcInputCombinationRuleCount2(final int stateCount) {
+        // stateCount: 2
+        // 1 = 256 / (2 * 2 * 2 * 2 * 2 * 2 * 2 * 2)
+        // 8 = ((3 * 2) + (2 * 1)
+        // 8 = 6 + 2
+        // 8 = 4 + 2 + 2
+        // 8 = ((3 * 2) + (2 * 1) + (1 * 0)
+        // 8 = 6 + 2 + 0
+        // 8 = 2 * 2 * 2
+        // 8 = (2 + 2) * 2
+        // 8 = 4 + 3  + 1
+
+        // 9 = 4 + 3 + 2
+        // 9 = 6 + 3
+        // 9 = (2 * 3) + (1 * 3)
+        // 9 = 6 + 2 + 1
+        // 9 = (2 * 3) + (1 * 2) + (1 * 1)
+
+        // stateCount: 3
+        // 1 = 32768 / 2 / 2 / 2 / 2 / 2 / 2 / 2 / 2 / 2 / 2 / 2 / 2 / 2 / 2 / 2
+        // 1 = 32768 / (2 * 2 * 2 * 2 * 2 * 2 * 2 * 2 * 2 * 2 * 2 * 2 * 2 * 2 * 2)
+        // 15 = 3 * 3 + 2 * 3
+        // 15 = 5 * 3
+        // 15 = ((2 * 3) + (3 * 3)) - 1
+        // 15 = ((3 * 3) + (2 * 3))
+        // 15 = 9 + 6
+        // 15 = ((3 * 3) + (2 * 2) + (1 * 2))
+        // 15 = 9 + 4 + 2
+
+        // 15 = ((3 * 3) + (2 * 3))
+        // 15 = 9 + 6
+        // 15 = ((3 * 3) + (2 * 2) + (1 * 2))
+        // 15 = 9 + 4 + 2
+        // 15 = 8 + 4 + 2 + 1
+        // 15 = 5 + 4 + 3 + 2 + 1
+        // 15 = (3 + 2) * 3
+        // 15 = 6 + 5 + 4
+
+        // 16 = 9 + 6 + 1
+        // 16 = (3 * 3) + (2 * 3) + 1
+        final int bitCount = calcInputCombinationBitCount(stateCount);
+       final long inputCombinationRuleCount = (1 << bitCount);
+        final long baseRuleCount = RuleService.calcBaseRuleCount(stateCount, bitCount);
+        //final int shift = ((2 * stateCount) + (3 * stateCount));
+        //final int shift = (((stateCount) * 3) + ((stateCount) * 2));
+        return inputCombinationRuleCount;
+    }
+
     public static int calcInputCombinationMax(final int stateCount) {
         return calcInputCombinationRuleCount(stateCount) - 1;
     }

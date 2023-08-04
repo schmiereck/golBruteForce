@@ -21,7 +21,33 @@ public abstract class MathUtils {
             mirroredRuleNr |= resultBit << ((inputCombinationBitCount - 1) - pos);
             bit = bit << 1;
         }
-
         return mirroredRuleNr;
+    }
+
+    public static long previousRuleNr(final long ruleNr, final int stateCount) {
+        return 0L;
+    }
+
+    /**
+     * @return State corresponds to a previous rule with fewer states?
+     */
+    public static boolean checkPreviousRule(final long ruleNr, final int stateCount) {
+        /*
+        final boolean ret;
+
+        final int previousStateCount = stateCount - 1;
+        final long inputCombinationRuleCount = RuleService.calcInputCombinationRuleCount(previousStateCount);
+        final long baseRuleMax = RuleService.calcBaseRuleMax(previousStateCount, inputCombinationRuleCount);
+        //final long inputCombinationMax = RuleService.calcInputCombinationMax(stateCount);
+
+        if (ruleNr < baseRuleMax) {
+            ret = true;
+        } else {
+            ret = false;
+        }
+
+        return ret;
+        */
+        return false;
     }
 }

@@ -1,19 +1,22 @@
 package de.schmiereck.golBruteForce;
 
+import static de.schmiereck.golBruteForce.util.MathUtils.checkPreviousRule;
 import static de.schmiereck.golBruteForce.util.MathUtils.invertRuleNr;
 import static de.schmiereck.golBruteForce.util.MathUtils.mirrorRuleNr;
+import static de.schmiereck.golBruteForce.util.MathUtils.previousRuleNr;
 import static de.schmiereck.golBruteForce.util.PrintUtils.toBinaryStr;
 
 public class Main {
     public static void main(String[] args) {
         System.out.println("Hello World of Life!");
 
-        calcSimple();
-        //calcComplexSimpleInit();
-        //calcComplex();
+        //calcSimpleSimpleInit(true);
+        calcSimpleComplexInit(false);
+        //calcComplexSimpleInit(true);
+        //calcComplex(true);
     }
 
-    private static void calcSimple() {
+    private static void calcSimpleSimpleInit(final boolean showMinimal) {
         final int size = 32 + 1;
 
         final int historyCount = 16 + 1;
@@ -23,10 +26,23 @@ public class Main {
 
         final int cellCount = 3;
         final int stateCount = 2;//3;
-        calc(size, historyCount, initSize, initCnt, cellCount, stateCount);
+        calc(size, historyCount, initSize, initCnt, cellCount, stateCount, showMinimal);
     }
 
-    private static void calcComplexSimpleInit() {
+    private static void calcSimpleComplexInit(final boolean showMinimal) {
+        final int size = 32 + 1;
+
+        final int historyCount = 16 + 1;
+
+        final int initSize = 7;//5;//3;
+        final int initCnt = 1 << initSize;
+
+        final int cellCount = 3;
+        final int stateCount = 2;//3;
+        calc(size, historyCount, initSize, initCnt, cellCount, stateCount, showMinimal);
+    }
+
+    private static void calcComplexSimpleInit(final boolean showMinimal) {
         final int size = 32 + 1;
 
         final int historyCount = 16 + 1;
@@ -36,10 +52,10 @@ public class Main {
 
         final int cellCount = 3;
         final int stateCount = 3;
-        calc(size, historyCount, initSize, initCnt, cellCount, stateCount);
+        calc(size, historyCount, initSize, initCnt, cellCount, stateCount, showMinimal);
     }
 
-    private static void calcComplex() {
+    private static void calcComplex(final boolean showMinimal) {
         final int size = 32 + 1;
 
         final int historyCount = 16 + 1;
@@ -49,11 +65,11 @@ public class Main {
 
         final int cellCount = 3;
         final int stateCount = 3;
-        calc(size, historyCount, initSize, initCnt, cellCount, stateCount);
+        calc(size, historyCount, initSize, initCnt, cellCount, stateCount, showMinimal);
     }
 
     private static void calc(final int size, final int historyCount, final int initSize, final int initCnt,
-                             final int cellCount, final int stateCount) {
+                             final int cellCount, final int stateCount, final boolean showMinimal) {
         final int middleSizePos = size / 2;
         final int startSizePos = middleSizePos + (initSize / 2);
 
@@ -61,18 +77,18 @@ public class Main {
         final long baseRuleCount = RuleService.calcBaseRuleCount(stateCount, inputCombinationRuleCount);
         for (long ruleNr = 0; ruleNr < baseRuleCount; ruleNr++) {
         //int ruleNr = 90; {
-            System.out.println("=================================================================================");
+            if (showMinimal == false) {
+                System.out.println("=================================================================================");
+            }
             final RuleCheck ruleCheck = checkRule(ruleNr, stateCount);
 
-            if (ruleCheck != RuleCheck.Run) {
-                showRuleCheck(ruleNr, stateCount, ruleCheck);
-            } else {
+            if (ruleCheck == RuleCheck.Run) {
                 final Rule rule = RuleService.createRule(stateCount, ruleNr, cellCount);
-                showRule(rule, false);
+                if (showMinimal == false) {
+                    showRule(rule, false);
+                }
 
                 for (int initPos = 1; initPos < initCnt; initPos++) {
-                    System.out.printf("initPos: %2d\n", initPos);
-
                     final World world = new World(size, historyCount);
 
                     for (int initCellPos = 0; initCellPos < initSize; initCellPos++) {
@@ -89,9 +105,20 @@ public class Main {
                     final FilterResult filterResult = filterWorldOfInteresst(world);
 
                     //if (((filterResult.staticAfter == -1) || (filterResult.staticAfter > 3))) {
-                    if (((filterResult.staticDeathAfter == -1) || (filterResult.staticDeathAfter > 4))) {
-                        showWorld(world);
+                    if (((filterResult.staticDeathAfter == -1) || (filterResult.staticDeathAfter > 4)) &&
+                        (filterResult.particle == true))
+                    {
+                        if (showMinimal == false) {
+                            System.out.printf("initPos: %2d\n", initPos);
+                            showWorld(world);
+                        } else {
+                            showRuleMinimal(rule);
+                        }
                     }
+                }
+            } else {
+                if (showMinimal == false) {
+                    showRuleCheck(ruleNr, stateCount, ruleCheck);
                 }
             }
         }
@@ -99,26 +126,31 @@ public class Main {
 
     enum RuleCheck {
         Run,
+        PreviousRule,
         Inverted,
         Mirror,
         InvertedMirror
     }
     private static RuleCheck checkRule(final long ruleNr, final int stateCount) {
         final RuleCheck retRuleCheck;
-        final long invertedRuleNr = invertRuleNr(ruleNr, stateCount);
 
-        if (invertedRuleNr < ruleNr) {
-            retRuleCheck = RuleCheck.Inverted;
+        if (checkPreviousRule(ruleNr, stateCount)) {
+            retRuleCheck = RuleCheck.PreviousRule;
         } else {
-            final long mirroredRuleNr = mirrorRuleNr(ruleNr, stateCount);
-            if (mirroredRuleNr < ruleNr) {
-                retRuleCheck = RuleCheck.Mirror;
+            final long invertedRuleNr = invertRuleNr(ruleNr, stateCount);
+            if (invertedRuleNr < ruleNr) {
+                retRuleCheck = RuleCheck.Inverted;
             } else {
-                final long invertedMirroredRuleNr = invertRuleNr(mirroredRuleNr, stateCount);
-                if (invertedMirroredRuleNr < ruleNr) {
-                    retRuleCheck = RuleCheck.InvertedMirror;
+                final long mirroredRuleNr = mirrorRuleNr(ruleNr, stateCount);
+                if (mirroredRuleNr < ruleNr) {
+                    retRuleCheck = RuleCheck.Mirror;
                 } else {
-                    retRuleCheck = RuleCheck.Run;
+                    final long invertedMirroredRuleNr = invertRuleNr(mirroredRuleNr, stateCount);
+                    if (invertedMirroredRuleNr < ruleNr) {
+                        retRuleCheck = RuleCheck.InvertedMirror;
+                    } else {
+                        retRuleCheck = RuleCheck.Run;
+                    }
                 }
             }
         }
@@ -132,9 +164,14 @@ public class Main {
             case Inverted -> invertRuleNr(ruleNr, stateCount);
             case Mirror -> mirrorRuleNr(ruleNr, stateCount);
             case InvertedMirror -> invertRuleNr(mirrorRuleNr(ruleNr, stateCount), stateCount);
+            case PreviousRule -> previousRuleNr(ruleNr, stateCount);
             case Run -> ruleNr;
         };
         System.out.printf("Rule-Nr: %,d ignored - Rule is %s to Rule %,d\n", ruleNr, ruleCheck.toString(), checkedRuleNr);
+    }
+
+    private static void showRuleMinimal(final Rule rule) {
+        System.out.printf("Rule-Nr: %,4d [%,4d + %,4d]\n", rule.ruleNr, rule.level0RuleNr, rule.level1RuleNr);
     }
 
     private static void showRule(final Rule rule, final boolean showDetailedRule) {
@@ -178,6 +215,11 @@ public class Main {
                     retFilterResult.staticDeathAfter = lastRunPos;
                 }
             }
+        }
+
+        if ((world.complexityStat.absAverage == 1) && (world.energyStat.absAverage == 1) &&
+                (world.complexityStat.diffAverage == 0) && (world.energyStat.diffAverage == 0)) {
+            retFilterResult.particle = true;
         }
         return retFilterResult;
     }
