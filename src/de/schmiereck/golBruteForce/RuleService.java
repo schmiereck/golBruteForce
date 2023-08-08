@@ -12,10 +12,8 @@ public class RuleService {
         for (int aMatrixStatePos = 0; aMatrixStatePos < stateCount; aMatrixStatePos++) {
             for (int bMatrixStatePos = 0; bMatrixStatePos < stateCount; bMatrixStatePos++) {
                 for (int cMatrixStatePos = 0; cMatrixStatePos < stateCount; cMatrixStatePos++) {
-                    final int bitPos =
-                            (((aMatrixStatePos * stateCount * stateCount) +
-                                    (bMatrixStatePos * stateCount)) +
-                                    (cMatrixStatePos));
+                    final int bitPos = calcStatePos(aMatrixStatePos, bMatrixStatePos, cMatrixStatePos, stateCount);
+
                     final int mask = 0b1;
                     //final int bit = (0b1 << bitPos);
                     final int bit = (mask << bitPos);
@@ -34,6 +32,12 @@ public class RuleService {
             }
         }
         return rule;
+    }
+
+    private static int calcStatePos(final int aMatrixStatePos, final int bMatrixStatePos, final int cMatrixStatePos, final int stateCount) {
+        return ((aMatrixStatePos * stateCount * stateCount) +
+                (bMatrixStatePos * stateCount)) +
+                cMatrixStatePos;
     }
 
     public static Rule createRuleFor2States(final int stateCount, final int ruleNr, final int cellCount) {

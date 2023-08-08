@@ -1,5 +1,6 @@
 package de.schmiereck.golBruteForce;
 
+import static de.schmiereck.golBruteForce.CalcService.calcInitRunFilter;
 import static de.schmiereck.golBruteForce.util.MathUtils.checkPreviousRule;
 import static de.schmiereck.golBruteForce.util.MathUtils.invertRuleNr;
 import static de.schmiereck.golBruteForce.util.MathUtils.mirrorRuleNr;
@@ -11,7 +12,8 @@ public class Main {
         System.out.println("Hello World of Life!");
 
         //calcSimpleSimpleInit(true);
-        calcSimpleComplexInit(false);
+        calcSimpleForInit(false, 2, 3, false);
+        //calcSimpleComplexInit(false);
         //calcComplexSimpleInit(true);
         //calcComplex(true);
     }
@@ -27,6 +29,16 @@ public class Main {
         final int cellCount = 3;
         final int stateCount = 2;//3;
         calc(size, historyCount, initSize, initCnt, cellCount, stateCount, showMinimal);
+    }
+
+    private static void calcSimpleForInit(final boolean showMinimal, final int initSize, final int initPos, final boolean useFilter) {
+        final int size = 32 + 1;
+
+        final int historyCount = 16 + 1;
+
+        final int cellCount = 3;
+        final int stateCount = 2;//3;
+        calcForInitPos(size, historyCount, cellCount, stateCount, showMinimal, initSize, initPos, useFilter);
     }
 
     private static void calcSimpleComplexInit(final boolean showMinimal) {
@@ -70,9 +82,13 @@ public class Main {
 
     private static void calc(final int size, final int historyCount, final int initSize, final int initCnt,
                              final int cellCount, final int stateCount, final boolean showMinimal) {
-        final int middleSizePos = size / 2;
-        final int startSizePos = middleSizePos + (initSize / 2);
+        for (int initPos = 1; initPos < initCnt; initPos++) {
+            calcForInitPos(size, historyCount, cellCount, stateCount, showMinimal, initSize, initPos, true);
+        }
+    }
 
+    private static void calcForInitPos(int size, int historyCount, int cellCount, int stateCount, boolean showMinimal,
+                                       int initSize, int initPos, final boolean useFilter) {
         final int inputCombinationRuleCount = RuleService.calcInputCombinationRuleCount(stateCount);
         final long baseRuleCount = RuleService.calcBaseRuleCount(stateCount, inputCombinationRuleCount);
         for (long ruleNr = 0; ruleNr < baseRuleCount; ruleNr++) {
@@ -80,40 +96,30 @@ public class Main {
             if (showMinimal == false) {
                 System.out.println("=================================================================================");
             }
-            final RuleCheck ruleCheck = checkRule(ruleNr, stateCount);
+            final CalcService.RuleCheck ruleCheck = CalcService.checkRule(ruleNr, stateCount);
 
-            if (ruleCheck == RuleCheck.Run) {
+            if (ruleCheck == CalcService.RuleCheck.Run) {
                 final Rule rule = RuleService.createRule(stateCount, ruleNr, cellCount);
                 if (showMinimal == false) {
                     showRule(rule, false);
                 }
 
-                for (int initPos = 1; initPos < initCnt; initPos++) {
-                    final World world = new World(size, historyCount);
+                final World world = new World(size, historyCount);
 
-                    for (int initCellPos = 0; initCellPos < initSize; initCellPos++) {
-                        WorldService.submitCellState(world, startSizePos - initCellPos,
-                                CellStateService.calcInitCellState(initPos, initCellPos));
-                    }
-                    WorldService.calcStat(world, world.mapArr[world.actMapdPos], size);
+                final FilterResult filterResult = calcInitRunFilter(rule, world, initSize, initPos);
+                final boolean notFiltered;
+                if (useFilter) {
+                    notFiltered = CalcService.checkFilterResult(filterResult);
+                } else {
+                    notFiltered = true;
+                }
 
-                    for (int runPos = 1; runPos < world.historyCount; runPos++) {
-                        WorldService.calc(world, rule);
-                    }
-                    WorldService.calcWorldStat(world, rule);
-
-                    final FilterResult filterResult = filterWorldOfInteresst(world);
-
-                    //if (((filterResult.staticAfter == -1) || (filterResult.staticAfter > 3))) {
-                    if (((filterResult.staticDeathAfter == -1) || (filterResult.staticDeathAfter > 4)) &&
-                        (filterResult.particle == true))
-                    {
-                        if (showMinimal == false) {
-                            System.out.printf("initPos: %2d\n", initPos);
-                            showWorld(world);
-                        } else {
-                            showRuleMinimal(rule);
-                        }
+                if (notFiltered) {
+                    if (showMinimal == false) {
+                        System.out.printf("initPos: %2d\n", initPos);
+                        showWorld(world);
+                    } else {
+                        showRuleMinimal(rule);
                     }
                 }
             } else {
@@ -124,41 +130,7 @@ public class Main {
         }
     }
 
-    enum RuleCheck {
-        Run,
-        PreviousRule,
-        Inverted,
-        Mirror,
-        InvertedMirror
-    }
-    private static RuleCheck checkRule(final long ruleNr, final int stateCount) {
-        final RuleCheck retRuleCheck;
-
-        if (checkPreviousRule(ruleNr, stateCount)) {
-            retRuleCheck = RuleCheck.PreviousRule;
-        } else {
-            final long invertedRuleNr = invertRuleNr(ruleNr, stateCount);
-            if (invertedRuleNr < ruleNr) {
-                retRuleCheck = RuleCheck.Inverted;
-            } else {
-                final long mirroredRuleNr = mirrorRuleNr(ruleNr, stateCount);
-                if (mirroredRuleNr < ruleNr) {
-                    retRuleCheck = RuleCheck.Mirror;
-                } else {
-                    final long invertedMirroredRuleNr = invertRuleNr(mirroredRuleNr, stateCount);
-                    if (invertedMirroredRuleNr < ruleNr) {
-                        retRuleCheck = RuleCheck.InvertedMirror;
-                    } else {
-                        retRuleCheck = RuleCheck.Run;
-                    }
-                }
-            }
-        }
-
-        return retRuleCheck;
-    }
-
-    private static void showRuleCheck(final long ruleNr, final int stateCount, final RuleCheck ruleCheck) {
+    private static void showRuleCheck(final long ruleNr, final int stateCount, final CalcService.RuleCheck ruleCheck) {
         final long checkedRuleNr =
         switch (ruleCheck) {
             case Inverted -> invertRuleNr(ruleNr, stateCount);
@@ -196,32 +168,6 @@ public class Main {
                 }
             }
         }
-    }
-
-    private static FilterResult filterWorldOfInteresst(final World world) {
-        final FilterResult retFilterResult = new FilterResult();
-
-        for (int runPos = 1; runPos < world.historyCount; runPos++) {
-            final int lastRunPos = runPos - 1;
-            final Map lastMap = world.mapArr[lastRunPos];
-            final Map map = world.mapArr[runPos];
-            if (retFilterResult.staticAfter == -1) {
-                if (map.statComplexity == lastMap.statComplexity) {
-                    retFilterResult.staticAfter = lastRunPos;
-                }
-            }
-            if (retFilterResult.staticDeathAfter == -1) {
-                if ((map.statComplexity == 0) && (map.statComplexity == lastMap.statComplexity)) {
-                    retFilterResult.staticDeathAfter = lastRunPos;
-                }
-            }
-        }
-
-        if ((world.complexityStat.absAverage == 1) && (world.energyStat.absAverage == 1) &&
-                (world.complexityStat.diffAverage == 0) && (world.energyStat.diffAverage == 0)) {
-            retFilterResult.particle = true;
-        }
-        return retFilterResult;
     }
 
     private static void showWorld(final World world) {

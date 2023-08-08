@@ -3,9 +3,11 @@ package de.schmiereck.golBruteForce;
 import static de.schmiereck.golBruteForce.util.PrintUtils.toBinaryStr;
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.Test;
+
 class RuleServiceTest {
 
-    @org.junit.jupiter.api.Test
+    @Test
     void test1() {
         final long v1 = 0b00000000000000000000000000000111;
         //final long v2 = 0b00000000000000000000000000000111;
@@ -17,7 +19,7 @@ class RuleServiceTest {
         System.out.printf("%s %,d v\n", toBinaryStr(v, 32), v);
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void test2() {
         final long v1 = 0b00001000000000000000000000000111;
         //final long v2 = 0b00000000000000000000000000000111;
@@ -29,7 +31,7 @@ class RuleServiceTest {
         System.out.printf("%s %,d v\n", toBinaryStr(v, 32), v);
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void test3() {
         final long v1 = 0b00001000000000000000000000101010;
         final long v2 = 0b00001000000000000000000000000000;
@@ -40,7 +42,7 @@ class RuleServiceTest {
         System.out.printf("%s %,d v\n", toBinaryStr(v, 32), v);
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void createRule2() {
         final int stateCount = 3;
         final long ruleNr = 0b00000000000000000000000000101010;
@@ -61,7 +63,7 @@ class RuleServiceTest {
         assertEquals(0b00000000000000000000000000000000, level1RuleNr);
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void createRule1_0() {
         final int stateCount = 3;
         final long ruleNr = 0b00001000000000000000000000000000;
@@ -81,7 +83,7 @@ class RuleServiceTest {
         assertEquals(0b00000000000000000000000000000001, level1RuleNr);
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void createRule1_1() {
         final int stateCount = 3;
         final long ruleNr = 0b00001000000000000000000000000001;
@@ -101,7 +103,7 @@ class RuleServiceTest {
         assertEquals(0b00000000000000000000000000000001, level1RuleNr);
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void createRule1_x() {
         final int stateCount = 3;
         final long ruleNr = 0b00001000000000000000000000101010;
@@ -122,7 +124,7 @@ class RuleServiceTest {
         assertEquals(0b00000000000000000000000000000001, level1RuleNr);
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void createRule1_max_3() {
         final int stateCount = 3;
         final long ruleNr = 0b111111111111111111111111111_111111111111111111111111111L;
@@ -143,7 +145,7 @@ class RuleServiceTest {
         assertEquals(0b00000111111111111111111111111111L, level1RuleNr);
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void calcInputCombinationBitCount() {
         assertEquals(1, RuleService.calcInputCombinationBitCount(1));
         assertEquals(8, RuleService.calcInputCombinationBitCount(2));
@@ -151,7 +153,7 @@ class RuleServiceTest {
         assertEquals(64, RuleService.calcInputCombinationBitCount(4));
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void calcInputCombinationRuleCount() {
         //assertEquals(1, RuleService.calcInputCombinationRuleCount(1));
         assertEquals(256, RuleService.calcInputCombinationRuleCount(2));
