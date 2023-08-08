@@ -17,3 +17,19 @@ Y
 )src/de/schmiereck/golBruteForce/Rule.java,7\5\75962ce2c5d94e42cd0b049b82819ee25e64b8d0
 ]
 -src/de/schmiereck/golBruteForce/RuleTest.java,1\e\1e23b21452818b8cd3b9a8c27f90651844b07290
+[
++src/de/schmiereck/golRecursive/RecMain.java,7\2\72bf7b41081a80cfa63fd100502b88964c16048c
+\
+,src/de/schmiereck/golSimple/SimpleWorld.java,c\d\cd5b0043c7b2b5ef3f7d2d842dc0ced32e749452
+[
++src/de/schmiereck/golSimple/SimpleMain.java,7\1\7172e1adbd109bfb04889d03a844f89cb35223ff
+[
++src/de/schmiereck/golSimple/SimpleRule.java,0\0\0071ca1678431ba7d3cd43107712231dee58a570
+P
+ manual-filter-state-2-init-3.txt,c\d\cd3e667ad259e9fcd015f9a4f98fd8032559850c
+`
+0src/de/schmiereck/golBruteForce/CalcService.java,b\b\bb10690ac714e898ccf93a62cb781fa91725118a
+\
+,src/de/schmiereck/golRecursive/RecWorld.java,2\9\29fc6fac00c967f426e05c955d898de14a1bcd71
+d
+4src/de/schmiereck/golBruteForce/CalcServiceTest.java,4\e\4e253ea6a893f53406c6bac35efb67c586fbb333
