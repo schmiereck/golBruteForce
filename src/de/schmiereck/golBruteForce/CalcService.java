@@ -6,7 +6,7 @@ import static de.schmiereck.golBruteForce.util.MathUtils.mirrorRuleNr;
 
 public class CalcService {
 
-    public static FilterResult calcInitRunFilter(Rule rule, World world, int initSize, int initPos) {
+    public static FilterResult calcInitRunFilter(final Rule rule, final World world, final int initSize, final int initPos) {
         final int middleSizePos = world.size / 2;
         final int startSizePos = middleSizePos + (initSize / 2);
 
@@ -22,7 +22,7 @@ public class CalcService {
         return filterResult;
     }
 
-    public static void calcInit(World world, int initSize, int initPos, int startSizePos) {
+    public static void calcInit(final World world, final int initSize, final int initPos, final int startSizePos) {
         for (int initCellPos = 0; initCellPos < initSize; initCellPos++) {
             WorldService.submitCellState(world, startSizePos - initCellPos,
                     CellStateService.calcInitCellState(initPos, initCellPos));
@@ -48,11 +48,17 @@ public class CalcService {
             }
         }
 
-        if ((world.complexityStat.absAverage == 1) && (world.energyStat.absAverage == 1) &&
-                (world.complexityStat.diffAverage == 0) && (world.energyStat.diffAverage == 0)) {
+        if ((checkInRange(world.complexityStat.absAverage, 1, 3)) &&
+            (checkInRange(world.energyStat.absAverage, 1, 3)) &&
+            (checkInRange(world.complexityStat.diffAverage, 0, 1)) &&
+            (checkInRange(world.energyStat.diffAverage, 0, 1))) {
             retFilterResult.particle = true;
         }
         return retFilterResult;
+    }
+
+    private static boolean checkInRange(final int value, final int lower, final int upper) {
+        return (value >= lower) && (value <= upper);
     }
 
     enum RuleCheck {

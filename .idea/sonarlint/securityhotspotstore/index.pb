@@ -25,11 +25,19 @@ Y
 +src/de/schmiereck/golSimple/SimpleMain.java,7\1\7172e1adbd109bfb04889d03a844f89cb35223ff
 [
 +src/de/schmiereck/golSimple/SimpleRule.java,0\0\0071ca1678431ba7d3cd43107712231dee58a570
-P
- manual-filter-state-2-init-3.txt,c\d\cd3e667ad259e9fcd015f9a4f98fd8032559850c
-`
-0src/de/schmiereck/golBruteForce/CalcService.java,b\b\bb10690ac714e898ccf93a62cb781fa91725118a
 \
 ,src/de/schmiereck/golRecursive/RecWorld.java,2\9\29fc6fac00c967f426e05c955d898de14a1bcd71
+`
+0src/de/schmiereck/golBruteForce/RuleService.java,e\7\e78343a83d54b9247bf1a68b28eb5eb232e4f734
+P
+ manual-filter-state-2-init-1.txt,e\e\ee9fc44376cab32b3dc9d7bb055269616f17fc81
+„
+Tsrc/de/schmiereck/golBruteForce/util/MathUtils_WHEN_checkPreviousRule_is_called.java,9\e\9e2ece58b38b186c64e09859d781af1aed003c84
 d
-4src/de/schmiereck/golBruteForce/CalcServiceTest.java,4\e\4e253ea6a893f53406c6bac35efb67c586fbb333
+4src/de/schmiereck/golBruteForce/RuleServiceTest.java,7\c\7c9eecfba658a1cb3e4bd115856179bf6fb8cdec
+[
++src/de/schmiereck/golRecursive/RecRule.java,b\e\bea845d5e2369f0d887967009f0b951882f50e7c
+c
+3src/de/schmiereck/golBruteForce/util/MathUtils.java,4\8\481b49521cb54316fe0ec637e85b040e979af7c7
+e
+5src/de/schmiereck/golBruteForce/CellStateService.java,3\a\3ae2df39e5090d3d4e4e2090d7782f9392feca9a

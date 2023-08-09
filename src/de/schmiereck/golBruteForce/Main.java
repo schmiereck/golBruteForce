@@ -12,7 +12,9 @@ public class Main {
         System.out.println("Hello World of Life!");
 
         //calcSimpleSimpleInit(true);
-        calcSimpleForInit(false, 2, 3, false);
+        //calcSimpleForInit(false, 1, 1, false);
+        //calcSimpleForInit(false, 2, 3, false);
+        calcSimpleForInit(false, 3, 5, false);
         //calcSimpleComplexInit(false);
         //calcComplexSimpleInit(true);
         //calcComplex(true);
