@@ -15,7 +15,7 @@ public class CalcServiceTest {
         final int historyCount = 16 + 1;
 
         final int initSize = 1;//7;//5;//3;
-        final int initPos = 1;
+        final int initPos = 0b00001; // 1
 
         final int cellCount = 3;
         final int stateCount = 2;//3;
@@ -51,7 +51,7 @@ public class CalcServiceTest {
         final int historyCount = 16 + 1;
 
         final int initSize = 2;//7;//5;//3;
-        final int initPos = 3;
+        final int initPos = 0b00011; // 3
 
         final int cellCount = 3;
         final int stateCount = 2;//3;
@@ -85,7 +85,7 @@ public class CalcServiceTest {
         final int historyCount = 16 + 1;
 
         final int initSize = 3;//7;//5;//3;
-        final int initPos = 5;
+        final int initPos = 0b00101; // 5
 
         final int cellCount = 3;
         final int stateCount = 2;//3;
@@ -93,6 +93,40 @@ public class CalcServiceTest {
         final long[] expectedRuleNrArr = {
         2 ,
         4 ,
+        6 ,
+        10,
+        12,
+        14,
+        20,
+        24,
+        34,
+        38,
+        42,
+        44,
+        46,
+        66,
+        74,
+                -1
+        };
+
+        runRulesTest(size, historyCount, initSize, initPos, cellCount, stateCount, expectedRuleNrArr);
+    }
+
+    @Test
+    public void GIVEN_initPos_7_THEN_expectedRuleNrArr() {
+        // Main.calcSimpleForInit(false, 3, 5, false);
+        final int size = 32 + 1;
+
+        final int historyCount = 16 + 1;
+
+        final int initSize = 3;//7;//5;//3;
+        final int initPos = 0b00111; // 7
+
+        final int cellCount = 3;
+        final int stateCount = 2;//3;
+
+        final long[] expectedRuleNrArr = {
+        2 ,
         6 ,
         10,
         12,

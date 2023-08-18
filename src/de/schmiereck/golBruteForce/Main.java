@@ -14,7 +14,7 @@ public class Main {
         //calcSimpleSimpleInit(true);
         //calcSimpleForInit(false, 1, 1, false);
         //calcSimpleForInit(false, 2, 3, false);
-        calcSimpleForInit(false, 3, 5, false);
+        calcSimpleForInit(false, 3, 13, false);
         //calcSimpleComplexInit(false);
         //calcComplexSimpleInit(true);
         //calcComplex(true);

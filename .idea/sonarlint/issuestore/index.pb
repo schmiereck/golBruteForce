@@ -41,3 +41,5 @@ P
  manual-filter-state-2-init-1.txt,e\e\ee9fc44376cab32b3dc9d7bb055269616f17fc81
 e
 5src/de/schmiereck/golBruteForce/CellStateService.java,3\a\3ae2df39e5090d3d4e4e2090d7782f9392feca9a
+9
+	readme.md,2\7\275d783e298228506068436512433d343feb52aa

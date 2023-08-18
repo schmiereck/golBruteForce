@@ -41,3 +41,5 @@ c
 3src/de/schmiereck/golBruteForce/util/MathUtils.java,4\8\481b49521cb54316fe0ec637e85b040e979af7c7
 e
 5src/de/schmiereck/golBruteForce/CellStateService.java,3\a\3ae2df39e5090d3d4e4e2090d7782f9392feca9a
+9
+	readme.md,2\7\275d783e298228506068436512433d343feb52aa
